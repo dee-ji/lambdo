@@ -3,8 +3,7 @@ import typer
 import requests
 from requests import Response
 from typing_extensions import Annotated
-# from pydantic import ValidationError
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from lambdo.lib.settings import api_token
 
 
 app = typer.Typer()
@@ -12,18 +11,6 @@ app = typer.Typer()
 
 def main():
     app()
-
-
-class Settings(BaseSettings):
-    model_config = SettingsConfigDict(
-        env_file='.env',
-        env_file_encoding='utf-8',
-        extra='allow',
-    )
-
-
-settings = Settings().model_dump()
-api_token = settings["api_token"]
 
 
 def get_response(url: str) -> Response:
