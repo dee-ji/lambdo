@@ -1,0 +1,19 @@
+[project]
+name = "lambda-labs-client"
+version = "0.1.0"
+description = "A CLI tool that enables you to interact with the Lambda Labs APIs"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.10.6",
+    "pydantic-settings>=2.7.1",
+    "requests>=2.32.3",
+    "typer>=0.15.1"
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project.scripts]
+lambdo = "lambdo.client:main"

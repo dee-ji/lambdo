@@ -1,12 +1,17 @@
 import json
 import typer
-import click
 import requests
+from requests import Response
+from typing_extensions import Annotated
 # from pydantic import ValidationError
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from requests import Response
+
 
 app = typer.Typer()
+
+
+def main():
+    app()
 
 
 class Settings(BaseSettings):
@@ -31,7 +36,6 @@ def get_response(url: str) -> Response:
 
 
 @app.command()
-@click.argument("instances")
 def instances():
     # curl -u API-KEY: https://cloud.lambdalabs.com/api/v1/instances | jq .
     resp = get_response(url="https://cloud.lambdalabs.com/api/v1/instances")
@@ -40,8 +44,11 @@ def instances():
 
 
 @app.command()
-@click.argument("instance-types")
-def instance_types(gpu: str | None = None, available: bool = False, by_location: str | None = None):
+def instance_types(
+        available: Annotated[bool, typer.Option(help="Check for availability of gpus")] = False,
+        gpu: Annotated[str | None, typer.Option(help="Provide the name of the gpu")] = None,
+        by_location: Annotated[str | None, typer.Option(help="Search by location")] = None
+):
     # curl -u API-KEY: https://cloud.lambdalabs.com/api/v1/instance-types | jq .
     resp = get_response(url="https://cloud.lambdalabs.com/api/v1/instance-types")
 
@@ -73,7 +80,6 @@ def instance_types(gpu: str | None = None, available: bool = False, by_location:
 
 
 @app.command()
-@click.argument("filesystems")
 def filesystems():
     # curl -u API-KEY: https://cloud.lambdalabs.com/api/v1/file-systems | jq .
     resp = get_response(url="https://cloud.lambdalabs.com/api/v1/file-systems")
@@ -82,4 +88,4 @@ def filesystems():
 
 
 if __name__ == "__main__":
-    app()
+    main()
