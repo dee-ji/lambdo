@@ -9,9 +9,7 @@ app = typer.Typer(invoke_without_command=True)
 @app.callback(invoke_without_command=True)
 def main(ctx: typer.Context):
     """
-    Display SSH keys from the Lambda Labs Public Cloud API.
-
-    By default, prints all SSH keys.
+    Display persistent storage filesystems from the Lambda Labs Public Cloud API.
     """
     if ctx.invoked_subcommand is not None:
         return
