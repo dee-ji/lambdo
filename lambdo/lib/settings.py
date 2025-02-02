@@ -1,5 +1,6 @@
 # from pydantic import ValidationError
 import os
+import typer
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -14,8 +15,10 @@ class Settings(BaseSettings):
 settings = Settings().model_dump()
 try:
     api_token = settings["api_key"]
+    ssh_path = settings["ssh_path"]
+    if '~/' in ssh_path:
+        ssh_path = os.path.expanduser(ssh_path)
 except KeyError:
-    print("WARNING: You must have a valid Lambda Labs API Key")
-    print("         Login to your account and go to API keys -> Generate API Key")
-    print("         Add this key to a local .env file and assign it to 'API_KEY' to continue...")
+    typer.echo("Uh oh, It looks like you haven't properly setup lambdo...")
+    typer.echo(f"    Run `lambdo setup` to configure your local parameters")
     exit()
