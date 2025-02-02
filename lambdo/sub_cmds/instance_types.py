@@ -1,43 +1,77 @@
 import json
 import typer
+from requests import Response
 from typing_extensions import Annotated
 from lambdo.lib.helpers import get_response
 
-app = typer.Typer()
+
+app = typer.Typer(invoke_without_command=True)
 
 
-@app.command("all")
-def get_available(
-        check: Annotated[bool,
-        typer.Option("--available/--unavailable",
-                     help="Check for availability of gpus")] = True):
+def filter_availability(data: Response, available: bool, unavailable: bool) -> list | Response:
+    """
+    Filter the data list based on the available or unavailable flags.
+    It is an error to provide both.
+    """
+    if available and unavailable:
+        typer.echo("Error: Cannot set both --available and --unavailable.")
+        raise typer.Exit(code=1)
+    if available:
+        return [
+            inst for inst in data.json()["data"] if data.json()["data"][inst]["regions_with_capacity_available"]
+        ]
+    elif unavailable:
+        return [
+            inst for inst in data.json()["data"] if not data.json()["data"][inst]["regions_with_capacity_available"]
+        ]
+    else:
+        return data
+
+@app.callback(invoke_without_command=True)
+def main(
+        ctx: typer.Context,
+        available: bool = typer.Option(
+            False,
+            "--available",
+            help="Show only available instance types."
+        ),
+        unavailable: bool = typer.Option(
+            False,
+            "--unavailable",
+            help="Show only unavailable instance types."
+        ),
+):
+    """
+    Display instance types from the Lambda Labs Public Cloud API.
+
+    By default, prints all instance types. Optionally, filter to only available or
+    unavailable instance types using --available or --unavailable.
+    """
+    # If a subcommand (like gpu or location) is invoked, skip this callback.
+    if ctx.invoked_subcommand is not None:
+        return
+
     # curl -u API-KEY: https://cloud.lambdalabs.com/api/v1/instance-types | jq .
     resp = get_response(url="https://cloud.lambdalabs.com/api/v1/instance-types")
 
-    if check:
-        find_available = [
-            inst for inst in resp.json()["data"] if resp.json()["data"][inst]["regions_with_capacity_available"]
-        ]
+    data = filter_availability(resp, available, unavailable)
 
-        if not find_available:
-            print("There are currently no instances available...")
-        else:
-            print(json.dumps(find_available, indent=2))
+    if available:
+        print(json.dumps(data, indent=2))
+    elif unavailable:
+        print(json.dumps(data, indent=2))
     else:
-        find_unavailable = [
-            inst for inst in resp.json()["data"] if not resp.json()["data"][inst]["regions_with_capacity_available"]
-        ]
+        print(json.dumps(data.json(), indent=2))
 
-        print(json.dumps(find_unavailable, indent=2))
 
-@app.command("gpu")
+@app.command("gpu", help="Search for a particular GPU by name")
 def get_gpu(name: Annotated[str, typer.Option("--name", "-n", help="Provide the name of the gpu")]):
     # curl -u API-KEY: https://cloud.lambdalabs.com/api/v1/instance-types | jq .
     resp = get_response(url="https://cloud.lambdalabs.com/api/v1/instance-types")
     print(json.dumps(resp.json()["data"][name], indent=2))
 
 
-@app.command("location")
+@app.command("location", help="Search for GPUs by location")
 def get_location(name: Annotated[str, typer.Option("--name", "-n", help="Search by location")]):
     # curl -u API-KEY: https://cloud.lambdalabs.com/api/v1/instance-types | jq .
     resp = get_response(url="https://cloud.lambdalabs.com/api/v1/instance-types")
