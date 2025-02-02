@@ -1,4 +1,7 @@
 import json
+import os.path
+from typing import Annotated
+
 import typer
 from lambdo.lib.helpers import get_response
 from lambdo.sub_cmds import instance_types
@@ -27,9 +30,12 @@ def filesystems():
 
     print(json.dumps(resp.json(), indent=2))
 
-@app.command(help="Setup the cli with your API KEY")
-def setup():
-    print("performing setup")
+@app.command(help="Setup the CLI with your API KEY")
+def setup(api_key: Annotated[str, typer.Option(prompt="Enter your Lambda Labs API Key")]):
+    # Create or overwrite the .env file that stores the API_KEY
+    with open(os.path.join(os.path.dirname(__file__), "lib/.env"), mode="w+") as f:
+        f.write(f"API_KEY={api_key}")
+    typer.echo("Setup completed successfully!")
 
 
 if __name__ == "__main__":
