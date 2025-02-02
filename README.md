@@ -66,6 +66,80 @@ $ lambdo instances [OPTIONS] COMMAND [ARGS]...
 
 * `--help`: Show this message and exit.
 
+**Commands**:
+
+* `detail`: Retrieve the details of an instance
+* `create`: Create an instance
+* `restart`: Restart instance(s)
+* `delete`: Delete instance(s)
+
+### `lambdo instances detail`
+
+Retrieve the details of an instance
+
+**Usage**:
+
+```console
+$ lambdo instances detail [OPTIONS]
+```
+
+**Options**:
+
+* `--inst-id TEXT`: The id of the instance  [required]
+* `--help`: Show this message and exit.
+
+### `lambdo instances create`
+
+Create an instance
+
+**Usage**:
+
+```console
+$ lambdo instances create [OPTIONS]
+```
+
+**Options**:
+
+* `--region-name TEXT`: The region name  [required]
+* `--instance-type-name TEXT`: The instance type name  [required]
+* `--ssh-key-names TEXT`: The name of the ssh key  [required]
+* `--file-system-names TEXT`: The name of the filesystem  [required]
+* `--quantity INTEGER`: The quantity of instances  [default: 1]
+* `--name TEXT`: The custom name of the instance
+* `--from-file TEXT`: Path to a file containing required parameters
+* `--help`: Show this message and exit.
+
+### `lambdo instances restart`
+
+Restart instance(s)
+
+**Usage**:
+
+```console
+$ lambdo instances restart [OPTIONS]
+```
+
+**Options**:
+
+* `--inst-id TEXT`: The id of the instance you want to delete  [required]
+* `--help`: Show this message and exit.
+
+### `lambdo instances delete`
+
+Delete instance(s)
+
+**Usage**:
+
+```console
+$ lambdo instances delete [OPTIONS]
+```
+
+**Options**:
+
+* `--inst-id TEXT`: The id of the instance you want to delete  [required]
+* `--from-file TEXT`: Path to a file containing required parameters
+* `--help`: Show this message and exit.
+
 ## `lambdo instance-types`
 
 List the instances types offered by Lambda GPU Cloud
@@ -181,4 +255,3 @@ $ lambdo ssh-keys delete [OPTIONS]
 
 * `--key TEXT`: The id of the SSH key you want to delete  [required]
 * `--help`: Show this message and exit.
-

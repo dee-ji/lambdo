@@ -21,7 +21,11 @@ def get_response(url: str) -> Response:
     return response
 
 
-def post_request(url: str, data: Optional[dict|None] = None, files: Optional[dict|list|None] = None) -> Response:
+def post_request(
+        url: str,
+        data: Optional[dict|list[dict]|None] = None,
+        files: Optional[dict|list|None] = None
+) -> Response:
     """
     Helper function to post a request
     """
