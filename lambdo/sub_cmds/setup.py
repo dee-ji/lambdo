@@ -18,7 +18,7 @@ def main(
     if ctx.invoked_subcommand is not None:
         return
     # Create or overwrite the .env file that stores the API_KEY
-    with open(os.path.join(os.path.dirname(__file__), "lib/.env"), mode="w+") as f:
+    with open(os.path.join(os.path.dirname(__file__), "../lib/.env"), mode="w+") as f:
         f.write(f"API_KEY={api_key}\n")
         f.write(f"SSH_PATH={ssh_path}\n")
     typer.echo("Setup completed successfully!")
