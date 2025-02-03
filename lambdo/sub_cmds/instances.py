@@ -75,7 +75,7 @@ def create_instance(
 @app.command("restart", help="Restart instance(s)")
 def restart_instances(
     inst_id: Annotated[
-        list[str], typer.Option(help="The id of the instance you want to delete")
+        list[str], typer.Option(help="The id of the instance(s) you want to restart")
     ],
 ):
     data = {"instance_ids": inst_id}
@@ -90,7 +90,7 @@ def restart_instances(
 @app.command("delete", help="Delete instance(s)")
 def delete_instances(
     inst_id: Annotated[
-        list[str], typer.Option(help="The id of the instance you want to delete")
+        list[str], typer.Option(help="The id of the instance(s) you want to delete")
     ],
     from_file: Annotated[
         str | None, typer.Option(help="Path to a file containing required parameters")

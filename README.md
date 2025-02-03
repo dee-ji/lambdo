@@ -121,7 +121,7 @@ $ lambdo instances restart [OPTIONS]
 
 **Options**:
 
-* `--inst-id TEXT`: The id of the instance you want to delete  [required]
+* `--inst-id TEXT`: The id of the instance(s) you want to restart  [required]
 * `--help`: Show this message and exit.
 
 ### `lambdo instances delete`
@@ -136,7 +136,7 @@ $ lambdo instances delete [OPTIONS]
 
 **Options**:
 
-* `--inst-id TEXT`: The id of the instance you want to delete  [required]
+* `--inst-id TEXT`: The id of the instance(s) you want to delete  [required]
 * `--from-file TEXT`: Path to a file containing required parameters
 * `--help`: Show this message and exit.
 
