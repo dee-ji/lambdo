@@ -60,11 +60,11 @@ def main(
     data = filter_availability(resp, available, unavailable)
 
     if available:
-        print(json.dumps(data, indent=2))
+        typer.echo(json.dumps(data, indent=2))
     elif unavailable:
-        print(json.dumps(data, indent=2))
+        typer.echo(json.dumps(data, indent=2))
     else:
-        print(json.dumps(data.json(), indent=2))
+        typer.echo(json.dumps(data.json(), indent=2))
 
 
 @app.command("gpu", help="Search for a particular GPU by name")
@@ -75,7 +75,7 @@ def get_gpu(
 ):
     # curl -u API-KEY: https://cloud.lambdalabs.com/api/v1/instance-types | jq .
     resp = get_response(url="https://cloud.lambdalabs.com/api/v1/instance-types")
-    print(json.dumps(resp.json()["data"][name], indent=2))
+    typer.echo(json.dumps(resp.json()["data"][name], indent=2))
 
 
 @app.command("location", help="Search for GPUs by location")
@@ -98,6 +98,6 @@ def get_location(
             if find_by_location[0]
             in resp.json()["data"][inst]["regions_with_capacity_available"]
         ]
-        print(json.dumps(available_instance, indent=2))
+        typer.echo(json.dumps(available_instance, indent=2))
     else:
-        print("There are currently no instances available...")
+        typer.echo("There are currently no instances available...")
