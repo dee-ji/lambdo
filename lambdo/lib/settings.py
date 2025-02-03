@@ -1,16 +1,13 @@
-# from pydantic import ValidationError
 import os
-
-import click
 import typer
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from lambdo.sub_cmds.setup import main
 
 
 if not os.path.exists(os.path.join(os.path.dirname(__file__), '.env')):
     with open(os.path.join(os.path.dirname(__file__), ".env"), mode="w+") as f:
         f.write(f"API_KEY=put-your-api-key-here\n")
         f.write(f"SSH_PATH=put-your-ssh-path-here\n")
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
