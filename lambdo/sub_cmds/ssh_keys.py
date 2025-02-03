@@ -39,9 +39,8 @@ def add_ssh_key(
             f.write(resp.json()["data"]["private_key"])
         # Make sure to set the pem file to 400 "Read Only"
         os.chmod(os.path.join(ssh_path, f"{key_name}.pem"), 0o400)
-        typer.echo(
-            f"The new private key has been written to: {os.path.join(ssh_path, f"{key_name}.pem")}"
-        )
+        new_key_path = os.path.join(ssh_path, f"{key_name}.pem")
+        typer.echo(f"The new private key has been written to: {new_key_path}")
     else:
         filename = typer.prompt("SSH Key filename")
         file = {"file": open(os.path.join(ssh_path, filename))}
