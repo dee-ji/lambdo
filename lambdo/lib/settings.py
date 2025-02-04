@@ -3,8 +3,10 @@ import typer
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-if not os.path.exists(os.path.join(os.path.dirname(__file__), '.env')):
-    with open(os.path.join(os.path.dirname(__file__), ".env"), mode="w+") as f:
+# Defined the path to the local environment variables and create the file if it doesn't exist
+env_path = os.path.join(os.path.dirname(__file__), ".env")
+if not os.path.exists(env_path):
+    with open(env_path, mode="w+") as f:
         f.write(f"API_KEY=put-your-api-key-here\n")
         f.write(f"SSH_PATH=put-your-ssh-path-here\n")
 
@@ -24,9 +26,11 @@ try:
     if api_token == "put-your-api-key-here" or ssh_path == "put-your-ssh-path-here":
         api_key = typer.prompt("Enter your Lambda Labs API Key")
         ssh_path = typer.prompt("Enter your ssh key path")
-        with open(os.path.join(os.path.dirname(__file__), ".env"), mode="w+") as f:
+        # Write the variables provided to the local .env file
+        with open(env_path, mode="w+") as f:
             f.write(f"API_KEY={api_key}\n")
             f.write(f"SSH_PATH={ssh_path}\n")
+        typer.echo(f"Your API Key and SSH path was written to: {env_path}")
     if '~/' in ssh_path:
         ssh_path = os.path.expanduser(ssh_path)
 except KeyError:
