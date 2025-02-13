@@ -1,37 +1,12 @@
 import json
 import typer
-from requests import Response
+from rich.table import Table
+from rich.console import Console
 from typing_extensions import Annotated
 from lambdo.lib.helpers import get_response
 
 
 app = typer.Typer(invoke_without_command=True)
-
-
-def filter_availability(
-    data: Response, available: bool, unavailable: bool
-) -> list | Response:
-    """
-    Filter the data list based on the available or unavailable flags.
-    It is an error to provide both.
-    """
-    if available and unavailable:
-        typer.echo("Error: Cannot set both --available and --unavailable.")
-        raise typer.Exit(code=1)
-    if available:
-        return [
-            inst
-            for inst in data.json()["data"]
-            if data.json()["data"][inst]["regions_with_capacity_available"]
-        ]
-    elif unavailable:
-        return [
-            inst
-            for inst in data.json()["data"]
-            if not data.json()["data"][inst]["regions_with_capacity_available"]
-        ]
-    else:
-        return data
 
 
 @app.callback(invoke_without_command=True)
@@ -55,16 +30,50 @@ def main(
         return
 
     # curl -u API-KEY: https://cloud.lambdalabs.com/api/v1/instance-types | jq .
-    resp = get_response(url="https://cloud.lambdalabs.com/api/v1/instance-types")
+    resp = get_response(
+        url="https://cloud.lambdalabs.com/api/v1/instance-types"
+    ).json()["data"]
 
-    data = filter_availability(resp, available, unavailable)
+    # typer.echo(json.dumps(resp, indent=2))
 
-    if available:
-        typer.echo(json.dumps(data, indent=2))
-    elif unavailable:
-        typer.echo(json.dumps(data, indent=2))
-    else:
-        typer.echo(json.dumps(data.json(), indent=2))
+    table = Table()
+    table.add_column("GPU", justify="right")
+    table.add_column("Locations", justify="right")
+    table.add_column("Description", justify="right")
+    table.add_column("Price Per Hour", justify="right")
+    table.add_column("VCPUs", justify="right")
+    table.add_column("VRAM", justify="right")
+    table.add_column("# of GPUs", justify="right")
+
+    for gpu_data in resp:
+        gpu_dict = resp[gpu_data]["instance_type"]
+
+        # Get locations list
+        available_locations = resp[gpu_data]["regions_with_capacity_available"]
+        # Combine any locations found
+        locations = (
+            ",".join(n["name"] for n in available_locations)
+            if len(available_locations) >= 1
+            else None
+        )
+        # Assign all row items
+        name = gpu_dict["name"]
+        description = gpu_dict["description"]
+        price = f'{gpu_dict["price_cents_per_hour"] / 100:.2f}'
+        vcpus = str(gpu_dict["specs"]["vcpus"])
+        vram = str(gpu_dict["specs"]["memory_gib"])
+        num_gpus = str(gpu_dict["specs"]["gpus"])
+
+        # Add table row based on available or unavailable
+        if available and locations is None:
+            continue
+        elif unavailable and locations is not None:
+            continue
+        else:
+            table.add_row(name, locations, description, price, vcpus, vram, num_gpus)
+    # Print Table
+    console = Console()
+    console.print(table)
 
 
 @app.command("gpu", help="Search for a particular GPU by name")
