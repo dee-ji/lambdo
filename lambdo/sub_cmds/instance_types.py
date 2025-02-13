@@ -42,7 +42,7 @@ def main(
     table.add_column("Description", justify="right")
     table.add_column("Price Per Hour", justify="right")
     table.add_column("VCPUs", justify="right")
-    table.add_column("VRAM", justify="right")
+    table.add_column("Memory", justify="right")
     table.add_column("# of GPUs", justify="right")
 
     for gpu_data in resp:
@@ -61,7 +61,8 @@ def main(
         description = gpu_dict["description"]
         price = f'{gpu_dict["price_cents_per_hour"] / 100:.2f}'
         vcpus = str(gpu_dict["specs"]["vcpus"])
-        vram = str(gpu_dict["specs"]["memory_gib"])
+        vram = gpu_dict["specs"]["memory_gib"]
+        vram = f"{vram}GB" if len(str(vram)) <= 3 else f"{vram / 1000:.2f}TB"
         num_gpus = str(gpu_dict["specs"]["gpus"])
 
         # Add table row based on available or unavailable
