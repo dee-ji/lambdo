@@ -1,6 +1,8 @@
 import os
 import json
 import typer
+from rich.table import Table
+from rich.console import Console
 from typing_extensions import Annotated
 from lambdo.lib.settings import ssh_path
 from lambdo.lib.helpers import get_response, post_request, delete_request
@@ -10,7 +12,12 @@ app = typer.Typer(invoke_without_command=True)
 
 
 @app.callback(invoke_without_command=True)
-def main(ctx: typer.Context):
+def main(
+    ctx: typer.Context,
+    debug: bool = typer.Option(
+        False, "--debug", "-d", help="Print additional helpful information."
+    ),
+):
     """
     Display SSH keys from the Lambda Labs Public Cloud API.
 
@@ -19,9 +26,25 @@ def main(ctx: typer.Context):
     if ctx.invoked_subcommand is not None:
         return
     # curl -u API-KEY: https://cloud.lambdalabs.com/api/v1/ssh-keys | jq .
-    resp = get_response(url="https://cloud.lambdalabs.com/api/v1/ssh-keys")
+    resp = get_response(url="https://cloud.lambdalabs.com/api/v1/ssh-keys").json()[
+        "data"
+    ]
+    if debug:
+        typer.echo(json.dumps(resp, indent=2))
+    # Create and add columns to ssh keys table
+    table = Table()
+    table.add_column("ID", justify="right")
+    table.add_column("Name", justify="right")
+    # Iterate over all ssh keys and add each row to the table
+    for ssh_dict in resp:
+        this_id = ssh_dict["id"]
+        name = ssh_dict["name"]
 
-    typer.echo(json.dumps(resp.json(), indent=2))
+        table.add_row(this_id, name)
+
+    # Print Table
+    console = Console()
+    console.print(table)
 
 
 @app.command("add", help="Add an SSH key")
