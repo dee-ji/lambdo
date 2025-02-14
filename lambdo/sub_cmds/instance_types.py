@@ -9,7 +9,9 @@ from lambdo.lib.helpers import get_response
 app = typer.Typer(invoke_without_command=True)
 
 
-def create_instance_types_table(inst: dict | list, available: bool = False, unavailable: bool = False) -> Table:
+def create_instance_types_table(
+    inst: dict | list, available: bool = False, unavailable: bool = False
+) -> Table:
     """
     Create a rich table object that populates the instance types data from Lambda Labs
     """
@@ -72,7 +74,9 @@ def create_instance_types_table(inst: dict | list, available: bool = False, unav
             elif unavailable and locations is not None:
                 continue
             else:
-                table.add_row(name, locations, description, price, vcpus, vram, num_gpus)
+                table.add_row(
+                    name, locations, description, price, vcpus, vram, num_gpus
+                )
 
             # table.add_row(name, locations, description, price, vcpus, vram, num_gpus)
     else:
@@ -132,11 +136,13 @@ def get_gpu(
         str, typer.Option("--name", "-n", help="Provide the name of the gpu")
     ],
     debug: bool = typer.Option(
-            False, "--debug", "-d", help="Print additional helpful information."
+        False, "--debug", "-d", help="Print additional helpful information."
     ),
 ):
     # curl -u API-KEY: https://cloud.lambdalabs.com/api/v1/instance-types | jq .
-    resp = get_response(url="https://cloud.lambdalabs.com/api/v1/instance-types").json()["data"][name]
+    resp = get_response(
+        url="https://cloud.lambdalabs.com/api/v1/instance-types"
+    ).json()["data"][name]
     if debug:
         typer.echo(json.dumps(resp, indent=2))
     # Create and print instance table
@@ -152,7 +158,9 @@ def get_location(
     ),
 ):
     # curl -u API-KEY: https://cloud.lambdalabs.com/api/v1/instance-types | jq .
-    resp = get_response(url="https://cloud.lambdalabs.com/api/v1/instance-types").json()["data"]
+    resp = get_response(
+        url="https://cloud.lambdalabs.com/api/v1/instance-types"
+    ).json()["data"]
     if debug:
         typer.echo(json.dumps(resp, indent=2))
 
@@ -168,8 +176,7 @@ def get_location(
         available_instance = [
             resp[inst]
             for inst in resp
-            if find_by_location[0]
-            in resp[inst]["regions_with_capacity_available"]
+            if find_by_location[0] in resp[inst]["regions_with_capacity_available"]
         ]
         # Create and print instance table
         table = create_instance_types_table(available_instance)
