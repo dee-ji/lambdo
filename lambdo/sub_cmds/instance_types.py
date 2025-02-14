@@ -9,6 +9,84 @@ from lambdo.lib.helpers import get_response
 app = typer.Typer(invoke_without_command=True)
 
 
+def create_instance_types_table(inst: dict | list, available: bool = False, unavailable: bool = False) -> Table:
+    """
+    Create a rich table object that populates the instance types data from Lambda Labs
+    """
+    table = Table()
+    table.add_column("GPU", justify="right")
+    table.add_column("Locations", justify="right")
+    table.add_column("Description", justify="right")
+    table.add_column("Price Per Hour", justify="right")
+    table.add_column("VCPUs", justify="right")
+    table.add_column("Memory", justify="right")
+    table.add_column("# of GPUs", justify="right")
+
+    if isinstance(inst, dict):
+        # Get locations list
+        available_locations = inst["regions_with_capacity_available"]
+        # Combine any locations found
+        locations = (
+            ",".join(n["name"] for n in available_locations)
+            if len(available_locations) >= 1
+            else None
+        )
+
+        gpu_dict = inst["instance_type"]
+
+        # Assign all row items
+        name = gpu_dict["name"]
+        description = gpu_dict["description"]
+        price = f'${gpu_dict["price_cents_per_hour"] / 100:.2f}'
+        vcpus = str(gpu_dict["specs"]["vcpus"])
+        vram = gpu_dict["specs"]["memory_gib"]
+        vram = f"{vram}GB" if len(str(vram)) <= 3 else f"{vram / 1000:.2f}TB"
+        num_gpus = str(gpu_dict["specs"]["gpus"])
+
+        table.add_row(name, locations, description, price, vcpus, vram, num_gpus)
+    elif isinstance(inst, list):
+        for i in inst:
+            # Get locations list
+            available_locations = i["regions_with_capacity_available"]
+            # Combine any locations found
+            locations = (
+                ",".join(n["name"] for n in available_locations)
+                if len(available_locations) >= 1
+                else None
+            )
+
+            gpu_dict = i["instance_type"]
+
+            # Assign all row items
+            name = gpu_dict["name"]
+            description = gpu_dict["description"]
+            price = f'${gpu_dict["price_cents_per_hour"] / 100:.2f}'
+            vcpus = str(gpu_dict["specs"]["vcpus"])
+            vram = gpu_dict["specs"]["memory_gib"]
+            vram = f"{vram}GB" if len(str(vram)) <= 3 else f"{vram / 1000:.2f}TB"
+            num_gpus = str(gpu_dict["specs"]["gpus"])
+
+            # Add table row based on available or unavailable
+            if available and locations is None:
+                continue
+            elif unavailable and locations is not None:
+                continue
+            else:
+                table.add_row(name, locations, description, price, vcpus, vram, num_gpus)
+
+            # table.add_row(name, locations, description, price, vcpus, vram, num_gpus)
+    else:
+        typer.Exit(1)
+
+    return table
+
+
+def print_table(table: Table):
+    # Print Table
+    console = Console()
+    console.print(table)
+
+
 @app.callback(invoke_without_command=True)
 def main(
     ctx: typer.Context,
@@ -17,6 +95,9 @@ def main(
     ),
     unavailable: bool = typer.Option(
         False, "--unavailable", help="Show only unavailable instance types."
+    ),
+    debug: bool = typer.Option(
+        False, "--debug", "-d", help="Print additional helpful information."
     ),
 ):
     """
@@ -34,47 +115,15 @@ def main(
         url="https://cloud.lambdalabs.com/api/v1/instance-types"
     ).json()["data"]
 
-    # typer.echo(json.dumps(resp, indent=2))
+    if debug:
+        typer.echo(json.dumps(resp, indent=2))
 
-    table = Table()
-    table.add_column("GPU", justify="right")
-    table.add_column("Locations", justify="right")
-    table.add_column("Description", justify="right")
-    table.add_column("Price Per Hour", justify="right")
-    table.add_column("VCPUs", justify="right")
-    table.add_column("Memory", justify="right")
-    table.add_column("# of GPUs", justify="right")
+    # Make response iterable to make it easier for parsing
+    resp = [resp[inst] for inst in resp]
 
-    for gpu_data in resp:
-        gpu_dict = resp[gpu_data]["instance_type"]
-
-        # Get locations list
-        available_locations = resp[gpu_data]["regions_with_capacity_available"]
-        # Combine any locations found
-        locations = (
-            ",".join(n["name"] for n in available_locations)
-            if len(available_locations) >= 1
-            else None
-        )
-        # Assign all row items
-        name = gpu_dict["name"]
-        description = gpu_dict["description"]
-        price = f'{gpu_dict["price_cents_per_hour"] / 100:.2f}'
-        vcpus = str(gpu_dict["specs"]["vcpus"])
-        vram = gpu_dict["specs"]["memory_gib"]
-        vram = f"{vram}GB" if len(str(vram)) <= 3 else f"{vram / 1000:.2f}TB"
-        num_gpus = str(gpu_dict["specs"]["gpus"])
-
-        # Add table row based on available or unavailable
-        if available and locations is None:
-            continue
-        elif unavailable and locations is not None:
-            continue
-        else:
-            table.add_row(name, locations, description, price, vcpus, vram, num_gpus)
-    # Print Table
-    console = Console()
-    console.print(table)
+    # Create and print table
+    table = create_instance_types_table(resp, available, unavailable)
+    print_table(table)
 
 
 @app.command("gpu", help="Search for a particular GPU by name")
@@ -82,32 +131,48 @@ def get_gpu(
     name: Annotated[
         str, typer.Option("--name", "-n", help="Provide the name of the gpu")
     ],
+    debug: bool = typer.Option(
+            False, "--debug", "-d", help="Print additional helpful information."
+    ),
 ):
     # curl -u API-KEY: https://cloud.lambdalabs.com/api/v1/instance-types | jq .
-    resp = get_response(url="https://cloud.lambdalabs.com/api/v1/instance-types")
-    typer.echo(json.dumps(resp.json()["data"][name], indent=2))
+    resp = get_response(url="https://cloud.lambdalabs.com/api/v1/instance-types").json()["data"][name]
+    if debug:
+        typer.echo(json.dumps(resp, indent=2))
+    # Create and print instance table
+    table = create_instance_types_table(resp)
+    print_table(table)
 
 
 @app.command("location", help="Search for GPUs by location")
 def get_location(
     name: Annotated[str, typer.Option("--name", "-n", help="Search by location")],
+    debug: bool = typer.Option(
+        False, "--debug", "-d", help="Print additional helpful information."
+    ),
 ):
     # curl -u API-KEY: https://cloud.lambdalabs.com/api/v1/instance-types | jq .
-    resp = get_response(url="https://cloud.lambdalabs.com/api/v1/instance-types")
+    resp = get_response(url="https://cloud.lambdalabs.com/api/v1/instance-types").json()["data"]
+    if debug:
+        typer.echo(json.dumps(resp, indent=2))
 
+    # Find any instance that has the provided location listed
     find_by_location = [
         loc
-        for inst in resp.json()["data"]
-        for loc in resp.json()["data"][inst]["regions_with_capacity_available"]
+        for inst in resp
+        for loc in resp[inst]["regions_with_capacity_available"]
         if name.lower() in loc["description"].lower() or name.lower() in loc["name"]
     ]
     if find_by_location:
+        # If there were any, then get a list of the instances to iterate over
         available_instance = [
-            resp.json()["data"][inst]
-            for inst in resp.json()["data"]
+            resp[inst]
+            for inst in resp
             if find_by_location[0]
-            in resp.json()["data"][inst]["regions_with_capacity_available"]
+            in resp[inst]["regions_with_capacity_available"]
         ]
-        typer.echo(json.dumps(available_instance, indent=2))
+        # Create and print instance table
+        table = create_instance_types_table(available_instance)
+        print_table(table)
     else:
         typer.echo("There are currently no instances available...")
