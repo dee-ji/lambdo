@@ -35,4 +35,4 @@ jobs:
           src: "./lambdo"
       - name: Test with pytest
         run: |
-          uv run pytest
+          pytest
