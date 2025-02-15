@@ -32,7 +32,7 @@ jobs:
           uv pip install pytest
       - name: Setup Lambdo
         run: |
-          lambdo setup --api_key $API_KEY --ssh-path ~/.ssh
+          lambdo setup --api_key "$API_KEY" --ssh-path "~/.ssh"
       - name: Run Ruff
         uses: astral-sh/ruff-action@v3
         with:
