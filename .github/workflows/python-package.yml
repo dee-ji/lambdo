@@ -31,8 +31,10 @@ jobs:
           uv sync
           uv pip install pytest
       - name: Setup Lambdo
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
         run: |
-          lambdo setup --api-key "${{ secrets.API_KEY }}" --ssh-path "~/.ssh"
+          lambdo setup --api-key "$API_KEY" --ssh-path "~/.ssh"
       - name: Run Ruff
         uses: astral-sh/ruff-action@v3
         with:
