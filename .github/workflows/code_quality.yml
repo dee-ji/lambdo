@@ -5,7 +5,7 @@ name: Lambdo Python Package
 
 on:
   push:
-#    branches: [ "main" ]
+    branches: [ "main" ]
   pull_request:
 #    branches: [ "main" ]
 
@@ -34,7 +34,7 @@ jobs:
           uv pip install pytest
       - name: Setup Lambdo
         env:
-          API_KEY: ${{ workflow.API_KEY }}
+          API_KEY: ${{ secrets.API_KEY }}
         run: |
           lambdo setup --api-key "$API_KEY" --ssh-path "~/.ssh"
       - name: Run Ruff Format
