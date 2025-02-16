@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    name: code-quality-check
+    name: CI
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
