@@ -4,7 +4,7 @@ from rich import print_json
 from rich.table import Table
 from rich.console import Console
 from typing_extensions import Annotated
-from lambdo.lib.helpers import get_response
+from lambdo.inc.helpers import get_response
 
 
 app = typer.Typer(invoke_without_command=True, add_completion=False)

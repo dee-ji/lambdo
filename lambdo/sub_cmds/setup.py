@@ -1,7 +1,7 @@
 import os
 import typer
 from typing_extensions import Annotated
-from lambdo.lib.settings import load_config, save_config, LAMBDO_CONFIG_PATH
+from lambdo.inc.settings import load_config, save_config, LAMBDO_CONFIG_PATH
 
 
 app = typer.Typer(invoke_without_command=True, add_completion=False)

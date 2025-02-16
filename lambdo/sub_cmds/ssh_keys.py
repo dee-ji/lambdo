@@ -5,8 +5,8 @@ from rich import print_json
 from rich.table import Table
 from rich.console import Console
 from typing_extensions import Annotated
-from lambdo.lib.settings import ssh_path
-from lambdo.lib.helpers import get_response, post_request, delete_request
+from lambdo.inc.settings import ssh_path
+from lambdo.inc.helpers import get_response, post_request, delete_request
 
 
 app = typer.Typer(invoke_without_command=True, add_completion=False)

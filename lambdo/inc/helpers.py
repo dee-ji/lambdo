@@ -3,7 +3,7 @@ import typer
 import requests
 from requests import Response, HTTPError
 from typing import Optional
-from lambdo.lib.settings import api_key
+from lambdo.inc.settings import api_key
 
 
 # A useful link to Lambda Labs Cloud API Docs: https://cloud.lambdalabs.com/api/v1/docs
@@ -22,9 +22,9 @@ def get_response(url: str) -> Response:
 
 
 def post_request(
-        url: str,
-        data: Optional[dict|list[dict]|None] = None,
-        files: Optional[dict|list|None] = None
+    url: str,
+    data: Optional[dict | list[dict] | None] = None,
+    files: Optional[dict | list | None] = None,
 ) -> Response:
     """
     Helper function to post a request
@@ -33,9 +33,13 @@ def post_request(
     try:
         if data is not None:
             data = json.dumps(data)
-            response = requests.post(url=url, auth=(api_key, ""), data=data, headers=headers)
+            response = requests.post(
+                url=url, auth=(api_key, ""), data=data, headers=headers
+            )
         elif files is not None:
-            response = requests.post(url=url, auth=(api_key, ""), files=files, headers=headers)
+            response = requests.post(
+                url=url, auth=(api_key, ""), files=files, headers=headers
+            )
         else:
             response = requests.post(url=url, auth=(api_key, ""), headers=headers)
     except requests.RequestException as e:
@@ -44,7 +48,9 @@ def post_request(
     try:
         response.raise_for_status()
     except HTTPError:
-        typer.echo("There was an issue with your request. See the below error for more details.")
+        typer.echo(
+            "There was an issue with your request. See the below error for more details."
+        )
 
     return response
 
