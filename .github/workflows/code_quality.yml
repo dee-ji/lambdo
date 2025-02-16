@@ -37,16 +37,12 @@ jobs:
           API_KEY: ${{ secrets.API_KEY }}
           SSH_PATH: ${{ secrets.SSH_PATH }}
         run: |
-          echo "Checking API_KEY..."
-          if [ -z "$API_KEY" ]; then echo "API_KEY is EMPTY"; else echo "API_KEY is SET"; fi
-          echo "Checking SSH_PATH..."
-          if [ -z "$SSH_PATH" ]; then echo "SSH_PATH is EMPTY"; else echo "SSH_PATH is SET"; fi
           lambdo setup --api-key $API_KEY --ssh-path $SSH_PATH
       - name: Run Ruff Format
         uses: astral-sh/ruff-action@v3
       # Update output format to enable automatic inline annotations.
       - name: Run Ruff Check
         run: ruff check --output-format=github .
-#      - name: Test with pytest
-#        run: |
-#          uv run pytest
+      - name: Test with pytest
+        run: |
+          uv run pytest
