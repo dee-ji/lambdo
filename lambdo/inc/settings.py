@@ -51,7 +51,7 @@ try:
         ssh_path = typer.prompt("Enter your ssh key path")
         # Write the variables provided to the local .env file
         # Update our config dictionary
-        if '~/' in ssh_path:
+        if "~/" in ssh_path:
             ssh_path = os.path.expanduser(ssh_path)
         # Write user-provided variables to correlating keys
         settings["API_KEY"] = api_key
@@ -63,5 +63,5 @@ try:
 
 except KeyError:
     typer.echo("Uh oh, It looks like you haven't properly setup lambdo...")
-    typer.echo(f"    Run `lambdo setup` to configure your local parameters")
+    typer.echo("    Run `lambdo setup` to configure your local parameters")
     exit()
