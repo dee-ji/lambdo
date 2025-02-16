@@ -3,7 +3,7 @@ name = "lambdo"
 version = "0.1.0"
 description = "A CLI tool that enables you to interact with the Lambda Labs APIs"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 dependencies = [
     "requests>=2.32.3",
     "rich>=13.9.4",
