@@ -143,14 +143,21 @@ def get_gpu(
     ),
 ):
     # curl -u API-KEY: https://cloud.lambdalabs.com/api/v1/instance-types | jq .
-    resp = get_response(
-        url="https://cloud.lambdalabs.com/api/v1/instance-types"
-    ).json()["data"][name]
-    if debug:
-        typer.echo(json.dumps(resp, indent=2))
-    # Create and print instance table
-    table = create_instance_types_table(resp)
-    print_table(table)
+    try:
+        resp = get_response(
+            url="https://cloud.lambdalabs.com/api/v1/instance-types"
+        ).json()["data"][name]
+        if debug:
+            typer.echo(json.dumps(resp, indent=2))
+        # Create and print instance table
+        table = create_instance_types_table(resp)
+        print_table(table)
+
+    except KeyError:
+        typer.echo(f"There is not a GPU with that name...")
+        typer.Exit(1)
+
+
 
 
 @app.command("location", help="Search for GPUs by location")
