@@ -4,10 +4,7 @@ from typing_extensions import Annotated
 from lambdo.lib.settings import load_config, save_config, LAMBDO_CONFIG_PATH
 
 
-app = typer.Typer(
-    invoke_without_command=True,
-    add_completion=False
-)
+app = typer.Typer(invoke_without_command=True, add_completion=False)
 
 
 @app.callback(invoke_without_command=True)
@@ -26,7 +23,7 @@ def main(
     api_key = settings.get("API_KEY", "put-your-api-key-here")
     ssh_path = settings.get("SSH_PATH", "put-your-ssh-path-here")
     # Update our config dictionary
-    if '~/' in ssh_path:
+    if "~/" in ssh_path:
         ssh_path = os.path.expanduser(ssh_path)
     # Write user-provided variables to correlating keys
     settings["API_KEY"] = api_key

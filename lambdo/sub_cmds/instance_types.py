@@ -1,15 +1,13 @@
 import json
 import typer
+from rich import print_json
 from rich.table import Table
 from rich.console import Console
 from typing_extensions import Annotated
 from lambdo.lib.helpers import get_response
 
 
-app = typer.Typer(
-    invoke_without_command=True,
-    add_completion=False
-)
+app = typer.Typer(invoke_without_command=True, add_completion=False)
 
 
 def create_instance_types_table(
@@ -123,7 +121,7 @@ def main(
     ).json()["data"]
 
     if debug:
-        typer.echo(json.dumps(resp, indent=2))
+        print_json(json.dumps(resp), indent=2)
 
     # Make response iterable to make it easier for parsing
     resp = [resp[inst] for inst in resp]
@@ -148,16 +146,14 @@ def get_gpu(
             url="https://cloud.lambdalabs.com/api/v1/instance-types"
         ).json()["data"][name]
         if debug:
-            typer.echo(json.dumps(resp, indent=2))
+            print_json(json.dumps(resp), indent=2)
         # Create and print instance table
         table = create_instance_types_table(resp)
         print_table(table)
 
     except KeyError:
-        typer.echo(f"There is not a GPU with that name...")
+        typer.echo("There is not a GPU with that name...")
         typer.Exit(1)
-
-
 
 
 @app.command("location", help="Search for GPUs by location")
@@ -172,7 +168,7 @@ def get_location(
         url="https://cloud.lambdalabs.com/api/v1/instance-types"
     ).json()["data"]
     if debug:
-        typer.echo(json.dumps(resp, indent=2))
+        print_json(json.dumps(resp), indent=2)
 
     # Find any instance that has the provided location listed
     find_by_location = [

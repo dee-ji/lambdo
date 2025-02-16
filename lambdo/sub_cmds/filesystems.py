@@ -1,14 +1,12 @@
 import json
 import typer
+from rich import print_json
 from rich.table import Table
 from rich.console import Console
 from lambdo.lib.helpers import get_response
 
 
-app = typer.Typer(
-    invoke_without_command=True,
-    add_completion=False
-)
+app = typer.Typer(invoke_without_command=True, add_completion=False)
 
 
 @app.callback(invoke_without_command=True)
@@ -28,7 +26,7 @@ def main(
         "data"
     ]
     if debug:
-        typer.echo(json.dumps(resp, indent=2))
+        print_json(json.dumps(resp), indent=2)
     # Create and add columns to filesystem table
     table = Table()
     table.add_column("ID", justify="right")

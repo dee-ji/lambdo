@@ -1,16 +1,14 @@
 import json
 import typer
 from requests import Response
+from rich import print_json
 from rich.table import Table
 from rich.console import Console
 from typing_extensions import Annotated
 from lambdo.lib.helpers import get_response, post_request
 
 
-app = typer.Typer(
-    invoke_without_command=True,
-    add_completion=False
-)
+app = typer.Typer(invoke_without_command=True, add_completion=False)
 
 
 def create_and_print_instance_table(resp: Response):
@@ -47,7 +45,7 @@ def main(
         "data"
     ]
     if debug:
-        typer.echo(json.dumps(resp, indent=2))
+        print_json(json.dumps(resp), indent=2)
 
     if len(resp) == 0:
         typer.echo("There are no instances running...")
@@ -101,7 +99,7 @@ def get_instance_details(
         url=f"https://cloud.lambdalabs.com/api/v1/instances/{inst_id}"
     ).json()["data"]
     if debug:
-        typer.echo(json.dumps(resp, indent=2))
+        print_json(json.dumps(resp), indent=2)
 
     table = Table()
     table.add_column("ID", justify="right")
