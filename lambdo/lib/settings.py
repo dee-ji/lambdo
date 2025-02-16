@@ -43,7 +43,10 @@ try:
     settings = load_config()
     api_key = settings.get("API_KEY", "put-your-api-key-here")
     ssh_path = settings.get("SSH_PATH", "put-your-ssh-path-here")
-    if api_key == "put-your-api-key-here" or ssh_path == "put-your-ssh-path-here":
+    if os.getenv("API_KEY") and os.getenv("SSH_PATH"):
+        api_key = os.getenv("API_KEY")
+        ssh_path = os.getenv("SSH_PATH")
+    elif api_key == "put-your-api-key-here" or ssh_path == "put-your-ssh-path-here":
         api_key = typer.prompt("Enter your Lambda Labs API Key")
         ssh_path = typer.prompt("Enter your ssh key path")
         # Write the variables provided to the local .env file
@@ -57,7 +60,6 @@ try:
         # Save back to file
         save_config(settings)
         typer.echo(f"Configuration has been saved to {LAMBDO_CONFIG_PATH}")
-        typer.Exit()
 
 except KeyError:
     typer.echo("Uh oh, It looks like you haven't properly setup lambdo...")
