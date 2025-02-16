@@ -20,8 +20,6 @@ def main(
         return
 
     settings = load_config()
-    api_key = settings.get("API_KEY", "put-your-api-key-here")
-    ssh_path = settings.get("SSH_PATH", "put-your-ssh-path-here")
     # Update our config dictionary
     if "~/" in ssh_path:
         ssh_path = os.path.expanduser(ssh_path)
