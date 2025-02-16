@@ -36,7 +36,10 @@ jobs:
         env:
           API_KEY: ${{ secrets.API_KEY }}
           SSH_PATH: ${{ secrets.SSH_PATH }}
-        run: lambdo setup --api-key $API_KEY --ssh-path $SSH_PATH
+        run: |
+          export API_KEY=$API_KEY
+          export SSH_PATH=$SSH_PATH
+          lambdo setup --api-key $API_KEY --ssh-path $SSH_PATH
       - name: Run Ruff Format
         uses: astral-sh/ruff-action@v3
       # Update output format to enable automatic inline annotations.
