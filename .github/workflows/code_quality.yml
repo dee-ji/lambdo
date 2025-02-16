@@ -1,0 +1,45 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: Lambdo Python Package
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: code-quality-check
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        python-version:
+#          - "3.11"
+          - "3.12"
+
+    steps:
+      - uses: actions/checkout@v4
+#      - name: Install uv and set the python version
+#        uses: astral-sh/setup-uv@v5
+#        with:
+#          python-version: ${{ matrix.python-version }}
+#      - name: Install dependencies
+#        run: |
+#          uv sync
+#          uv pip install pytest
+#      - name: Setup Lambdo
+#        env:
+#          API_KEY: ${{ workflow.API_KEY }}
+#        run: |
+#          lambdo setup --api-key "$API_KEY" --ssh-path "~/.ssh"
+      - name: Run Ruff Format
+        uses: astral-sh/ruff-action@v3
+      # Update output format to enable automatic inline annotations.
+      - name: Run Ruff Check
+        run: ruff check --output-format=github .
+#      - name: Test with pytest
+#        run: |
+#          uv run pytest
