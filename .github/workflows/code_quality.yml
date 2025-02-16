@@ -5,9 +5,9 @@ name: Lambdo Python Package
 
 on:
   push:
-#    branches: [ "main" ]
+    branches: [ "main" ]
   pull_request:
-#    branches: [ "main" ]
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -39,11 +39,8 @@ jobs:
           SSH_PATH: ${{ secrets.SSH_PATH }}
         run: |
           lambdo setup --api-key $API_KEY --ssh-path $SSH_PATH
-      - name: Run Ruff Format
+      - name: Run Ruff
         uses: astral-sh/ruff-action@v3
-      # Update output format to enable automatic inline annotations.
-      - name: Run Ruff Check
-        run: ruff check --output-format=github .
       - name: Test with pytest
         run: |
           uv run pytest
