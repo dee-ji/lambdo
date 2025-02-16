@@ -28,10 +28,10 @@ jobs:
           python-version: ${{ matrix.python-version }}
           enable-cache: true
           cache-dependency-glob: "uv.lock"
-#      - name: Install dependencies
-#        run: |
-#          uv sync
-#          uv pip install pytest
+      - name: Install dependencies
+        run: |
+          uv sync
+          uv pip install pytest
 #      - name: Setup Lambdo
 #        env:
 #          API_KEY: ${{ workflow.API_KEY }}
