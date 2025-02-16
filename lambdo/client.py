@@ -9,7 +9,8 @@ from lambdo.sub_cmds import (
 
 
 app = typer.Typer(
-    help="Lambdo is a CLI tool that utilizes the Lambda GPU Cloud Public APIs"
+    help="Lambdo is a CLI tool that utilizes the Lambda GPU Cloud Public APIs",
+    no_args_is_help=True,
 )
 app.add_typer(
     filesystems.app, name="filesystems", help="List your persistent storage filesystems"

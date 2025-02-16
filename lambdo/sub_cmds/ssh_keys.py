@@ -8,7 +8,10 @@ from lambdo.lib.settings import ssh_path
 from lambdo.lib.helpers import get_response, post_request, delete_request
 
 
-app = typer.Typer(invoke_without_command=True)
+app = typer.Typer(
+    invoke_without_command=True,
+    add_completion=False
+)
 
 
 @app.callback(invoke_without_command=True)

@@ -5,7 +5,10 @@ from rich.console import Console
 from lambdo.lib.helpers import get_response
 
 
-app = typer.Typer(invoke_without_command=True)
+app = typer.Typer(
+    invoke_without_command=True,
+    add_completion=False
+)
 
 
 @app.callback(invoke_without_command=True)

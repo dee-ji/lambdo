@@ -3,7 +3,7 @@ import typer
 import requests
 from requests import Response, HTTPError
 from typing import Optional
-from lambdo.lib.settings import api_token
+from lambdo.lib.settings import api_key
 
 
 # A useful link to Lambda Labs Cloud API Docs: https://cloud.lambdalabs.com/api/v1/docs
@@ -12,7 +12,7 @@ def get_response(url: str) -> Response:
     Helper function to get a response
     """
     try:
-        response = requests.get(url=url, auth=(api_token, ""))
+        response = requests.get(url=url, auth=(api_key, ""))
         response.raise_for_status()
     except requests.RequestException as e:
         typer.echo(f"Error fetching instance types: {e}")
@@ -33,11 +33,11 @@ def post_request(
     try:
         if data is not None:
             data = json.dumps(data)
-            response = requests.post(url=url, auth=(api_token, ""), data=data, headers=headers)
+            response = requests.post(url=url, auth=(api_key, ""), data=data, headers=headers)
         elif files is not None:
-            response = requests.post(url=url, auth=(api_token, ""), files=files, headers=headers)
+            response = requests.post(url=url, auth=(api_key, ""), files=files, headers=headers)
         else:
-            response = requests.post(url=url, auth=(api_token, ""), headers=headers)
+            response = requests.post(url=url, auth=(api_key, ""), headers=headers)
     except requests.RequestException as e:
         typer.echo(f"Error fetching instance types: {e}")
         raise typer.Exit(code=1)
@@ -54,7 +54,7 @@ def delete_request(url: str) -> Response:
     Helper function to delete a resource
     """
     try:
-        response = requests.delete(url=url, auth=(api_token, ""))
+        response = requests.delete(url=url, auth=(api_key, ""))
         response.raise_for_status()
     except requests.RequestException as e:
         typer.echo(f"Error fetching instance types: {e}")

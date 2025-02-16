@@ -7,7 +7,10 @@ from typing_extensions import Annotated
 from lambdo.lib.helpers import get_response, post_request
 
 
-app = typer.Typer(invoke_without_command=True)
+app = typer.Typer(
+    invoke_without_command=True,
+    add_completion=False
+)
 
 
 def create_and_print_instance_table(resp: Response):

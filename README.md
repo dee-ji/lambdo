@@ -12,9 +12,9 @@ https://cloud.lambdalabs.com/api/v1/docs
 ## How does it work?
 Lambdo was built using [Typer](https://typer.tiangolo.com) by tiangolo
 
-All of the features included in this page work out of the box, including command completion. Be sure to install it!
+All of the features of Typer are included in this package and work out of the box, including command completion. Be sure to install it!
 
-I utilized the `requests` library to handle the API calls and `pydantic` to import environment variables.
+I utilized the `requests` library to handle the API calls and store project variables in `~/.lambdo/config.json`.
 
 ## Documentation
 
@@ -50,6 +50,7 @@ $ lambdo filesystems [OPTIONS] COMMAND [ARGS]...
 
 **Options**:
 
+* `-d, --debug`: Print additional helpful information.
 * `--help`: Show this message and exit.
 
 ## `lambdo instances`
@@ -64,6 +65,7 @@ $ lambdo instances [OPTIONS] COMMAND [ARGS]...
 
 **Options**:
 
+* `-d, --debug`: Print additional helpful information.
 * `--help`: Show this message and exit.
 
 **Commands**:
@@ -86,6 +88,7 @@ $ lambdo instances detail [OPTIONS]
 **Options**:
 
 * `--inst-id TEXT`: The id of the instance  [required]
+* `-d, --debug`: Print additional helpful information.
 * `--help`: Show this message and exit.
 
 ### `lambdo instances create`
@@ -107,6 +110,7 @@ $ lambdo instances create [OPTIONS]
 * `--quantity INTEGER`: The quantity of instances  [default: 1]
 * `--name TEXT`: The custom name of the instance
 * `--from-file TEXT`: Path to a file containing required parameters
+* `-d, --debug`: Print additional helpful information.
 * `--help`: Show this message and exit.
 
 ### `lambdo instances restart`
@@ -122,6 +126,7 @@ $ lambdo instances restart [OPTIONS]
 **Options**:
 
 * `--inst-id TEXT`: The id of the instance(s) you want to restart  [required]
+* `-d, --debug`: Print additional helpful information.
 * `--help`: Show this message and exit.
 
 ### `lambdo instances delete`
@@ -138,6 +143,7 @@ $ lambdo instances delete [OPTIONS]
 
 * `--inst-id TEXT`: The id of the instance(s) you want to delete  [required]
 * `--from-file TEXT`: Path to a file containing required parameters
+* `-d, --debug`: Print additional helpful information.
 * `--help`: Show this message and exit.
 
 ## `lambdo instance-types`
@@ -154,6 +160,7 @@ $ lambdo instance-types [OPTIONS] COMMAND [ARGS]...
 
 * `--available`: Show only available instance types.
 * `--unavailable`: Show only unavailable instance types.
+* `-d, --debug`: Print additional helpful information.
 * `--help`: Show this message and exit.
 
 **Commands**:
@@ -174,6 +181,7 @@ $ lambdo instance-types gpu [OPTIONS]
 **Options**:
 
 * `-n, --name TEXT`: Provide the name of the gpu  [required]
+* `-d, --debug`: Print additional helpful information.
 * `--help`: Show this message and exit.
 
 ### `lambdo instance-types location`
@@ -189,6 +197,7 @@ $ lambdo instance-types location [OPTIONS]
 **Options**:
 
 * `-n, --name TEXT`: Search by location  [required]
+* `-d, --debug`: Print additional helpful information.
 * `--help`: Show this message and exit.
 
 ## `lambdo setup`
@@ -219,6 +228,7 @@ $ lambdo ssh-keys [OPTIONS] COMMAND [ARGS]...
 
 **Options**:
 
+* `-d, --debug`: Print additional helpful information.
 * `--help`: Show this message and exit.
 
 **Commands**:

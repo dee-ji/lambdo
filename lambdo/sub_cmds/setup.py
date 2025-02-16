@@ -1,9 +1,13 @@
 import os
 import typer
 from typing_extensions import Annotated
+from lambdo.lib.settings import load_config, save_config, LAMBDO_CONFIG_PATH
 
 
-app = typer.Typer(invoke_without_command=True)
+app = typer.Typer(
+    invoke_without_command=True,
+    add_completion=False
+)
 
 
 @app.callback(invoke_without_command=True)
@@ -17,8 +21,17 @@ def main(
     """
     if ctx.invoked_subcommand is not None:
         return
-    # Create or overwrite the .env file that stores the API_KEY
-    with open(os.path.join(os.path.dirname(__file__), "../lib/.env"), mode="w+") as f:
-        f.write(f"API_KEY={api_key}\n")
-        f.write(f"SSH_PATH={ssh_path}\n")
-    typer.echo("Setup completed successfully!")
+
+    settings = load_config()
+    api_key = settings.get("API_KEY", "put-your-api-key-here")
+    ssh_path = settings.get("SSH_PATH", "put-your-ssh-path-here")
+    # Update our config dictionary
+    if '~/' in ssh_path:
+        ssh_path = os.path.expanduser(ssh_path)
+    # Write user-provided variables to correlating keys
+    settings["API_KEY"] = api_key
+    settings["SSH_PATH"] = ssh_path
+
+    # Save back to file
+    save_config(settings)
+    typer.echo(f"Configuration has been saved to {LAMBDO_CONFIG_PATH}")
