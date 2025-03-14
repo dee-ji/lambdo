@@ -21,7 +21,7 @@ def main(
     """
     if ctx.invoked_subcommand is not None:
         return
-    # curl -u API-KEY: https://cloud.lambdalabs.com/api/v1/file-systems | jq .
+    # curl -u API-KEY: https://cloud.lambdalabs.com/api/v1/images | jq .
     resp = get_response(url="https://cloud.lambdalabs.com/api/v1/images").json()["data"]
     if debug:
         print_json(json.dumps(resp), indent=2)

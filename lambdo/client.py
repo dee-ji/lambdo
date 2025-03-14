@@ -1,6 +1,7 @@
 import typer
 from lambdo.sub_cmds import (
     filesystems,
+    firewall,
     images,
     instances,
     instance_types,
@@ -16,6 +17,7 @@ app = typer.Typer(
 app.add_typer(
     filesystems.app, name="filesystems", help="List your persistent storage filesystems"
 )
+app.add_typer(firewall.app, name="firewall", help="List your firewall rules")
 app.add_typer(images.app, name="images", help="List available images")
 app.add_typer(
     instances.app, name="instances", help="Manage your Lambda GPU Cloud instances"
