@@ -1,18 +1,23 @@
 # Lambdo
+
 Lamb*do* is a CLI tool that utilizes the Lambda GPU Cloud Public APIs
 
 ![help_output.png](lambdo/static/help_output.png)
 
 ## Lambda Labs Cloud API
+
 https://docs.lambdalabs.com/public-cloud/cloud-api/
 
 ## Lambda Labs Redoc
+
 https://cloud.lambdalabs.com/api/v1/docs
 
 ## How does it work?
+
 Lambdo was built using [Typer](https://typer.tiangolo.com) by tiangolo
 
-All of the features of Typer are included in this package and work out of the box, including command completion. Be sure to install it!
+All of the features of Typer are included in this package and work out of the box, including command completion. Be sure
+to install it!
 
 I utilized the `requests` library to handle the API calls and store project variables in `~/.lambdo/config.json`.
 
@@ -33,6 +38,8 @@ $ lambdo [OPTIONS] COMMAND [ARGS]...
 **Commands**:
 
 * `filesystems`: List your persistent storage filesystems
+* `firewall`: List your firewall rules
+* `images`: List available images
 * `instances`: Manage your Lambda GPU Cloud instances
 * `instance-types`: List the instances types offered by Lambda...
 * `setup`: Setup Lambdo with your API KEY and SSH path
@@ -46,6 +53,97 @@ List your persistent storage filesystems
 
 ```console
 $ lambdo filesystems [OPTIONS] COMMAND [ARGS]...
+```
+
+**Options**:
+
+* `-d, --debug`: Print additional helpful information.
+* `--help`: Show this message and exit.
+
+**Commands**:
+
+* `create`: Create a filesystem
+* `delete`: Delete a filesystem
+
+### `lambdo filesystems create`
+
+Create a filesystem
+
+**Usage**:
+
+```console
+$ lambdo filesystems create [OPTIONS]
+```
+
+**Options**:
+
+* `--name TEXT`: The name of the filesystem  [required]
+* `--region TEXT`: The region name  [required]
+* `-d, --debug`: Print additional helpful information.
+* `--help`: Show this message and exit.
+
+### `lambdo filesystems delete`
+
+Delete a filesystem
+
+**Usage**:
+
+```console
+$ lambdo filesystems delete [OPTIONS]
+```
+
+**Options**:
+
+* `--id TEXT`: The id of the filesystem you want to delete  [required]
+* `-d, --debug`: Print additional helpful information.
+* `--help`: Show this message and exit.
+
+## `lambdo firewall`
+
+List your firewall rules
+
+**Usage**:
+
+```console
+$ lambdo firewall [OPTIONS] COMMAND [ARGS]...
+```
+
+**Options**:
+
+* `-d, --debug`: Print additional helpful information.
+* `--help`: Show this message and exit.
+
+**Commands**:
+
+* `update`: Overwrites the inbound firewall rules...
+
+### `lambdo firewall update`
+
+Overwrites the inbound firewall rules currently active
+
+**Usage**:
+
+```console
+$ lambdo firewall update [OPTIONS]
+```
+
+**Options**:
+
+* `-p, --protocol TEXT`
+* `-r, --port-range TEXT`: Range of ports allowed
+* `-s, --source-net TEXT`: Source network allowed
+* `--description TEXT`: Description of the firewall rule
+* `-d, --debug`: Print additional helpful information.
+* `--help`: Show this message and exit.
+
+## `lambdo images`
+
+List available images
+
+**Usage**:
+
+```console
+$ lambdo images [OPTIONS] COMMAND [ARGS]...
 ```
 
 **Options**:
@@ -106,7 +204,7 @@ $ lambdo instances create [OPTIONS]
 * `--region-name TEXT`: The region name  [required]
 * `--instance-type-name TEXT`: The instance type name  [required]
 * `--ssh-key-names TEXT`: The name of the ssh key  [required]
-* `--file-system-names TEXT`: The name of the filesystem  [required]
+* `--filesystems TEXT`: The name of the filesystems  [required]
 * `--quantity INTEGER`: The quantity of instances  [default: 1]
 * `--name TEXT`: The custom name of the instance
 * `--from-file TEXT`: Path to a file containing required parameters
