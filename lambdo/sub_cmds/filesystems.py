@@ -3,7 +3,8 @@ import typer
 from rich import print_json
 from rich.table import Table
 from rich.console import Console
-from lambdo.inc.helpers import get_response
+from typing_extensions import Annotated
+from lambdo.inc.helpers import get_response, post_request, delete_request
 
 
 app = typer.Typer(invoke_without_command=True, add_completion=False)
@@ -63,3 +64,41 @@ def main(
     # Create and print table
     console = Console()
     console.print(table)
+
+
+@app.command("create", help="Create a filesystem")
+def create_filesystem(
+    name: Annotated[str, typer.Option(help="The name of the filesystem")],
+    region: Annotated[str, typer.Option(help="The region name")],
+    debug: bool = typer.Option(
+        False, "--debug", "-d", help="Print additional helpful information."
+    ),
+):
+    data = {"name": name, "region": region}
+    #
+    resp = post_request(
+        url="https://cloud.lambdalabs.com/api/v1/filesystems",
+        data=data,
+    )
+    if resp.status_code == 200:
+        typer.echo(f"File system was created with id={resp.json()['data']['id']}")
+    if debug:
+        typer.echo(json.dumps(resp.json(), indent=2))
+
+
+@app.command("delete", help="Delete a filesystem")
+def delete_filesystem(
+    id: Annotated[
+        str, typer.Option(help="The id of the filesystem you want to delete")
+    ],
+    debug: bool = typer.Option(
+        False, "--debug", "-d", help="Print additional helpful information."
+    ),
+):
+    resp = delete_request(url=f"https://cloud.lambdalabs.com/api/v1/filesystems/{id}")
+    if resp.status_code == 200:
+        typer.echo("The filesystem was deleted successfully")
+    else:
+        typer.Exit(code=1)
+    if debug:
+        typer.echo(json.dumps(resp.json(), indent=2))

@@ -144,9 +144,7 @@ def create_instance(
     region_name: Annotated[str, typer.Option(help="The region name")],
     instance_type_name: Annotated[str, typer.Option(help="The instance type name")],
     ssh_key_names: Annotated[list[str], typer.Option(help="The name of the ssh key")],
-    file_system_names: Annotated[
-        list[str], typer.Option(help="The name of the filesystem")
-    ],
+    filesystems: Annotated[list[str], typer.Option(help="The name of the filesystems")],
     quantity: Annotated[int, typer.Option(help="The quantity of instances")] = 1,
     name: Annotated[
         str | None, typer.Option(help="The custom name of the instance")
@@ -170,7 +168,7 @@ def create_instance(
             "region_name": region_name,
             "instance_type_name": instance_type_name,
             "ssh_key_names": ssh_key_names,
-            "file_system_names": file_system_names,
+            "file_system_names": filesystems,
             "quantity": quantity,
             "name": name,
         }
