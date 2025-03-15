@@ -16,7 +16,7 @@ https://cloud.lambdalabs.com/api/v1/docs
 
 Lambdo was built using [Typer](https://typer.tiangolo.com) by tiangolo
 
-All of the features of Typer are included in this package and work out of the box, including command completion. Be sure
+All the features of Typer are included in this package and work out of the box, including command completion. Be sure
 to install it!
 
 I utilized the `requests` library to handle the API calls and store project variables in `~/.lambdo/config.json`.

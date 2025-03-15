@@ -15,9 +15,11 @@ app = typer.Typer(
     no_args_is_help=True,
 )
 app.add_typer(
-    filesystems.app, name="filesystems", help="List your persistent storage filesystems"
+    filesystems.app,
+    name="filesystems",
+    help="Manage your persistent storage filesystems",
 )
-app.add_typer(firewall.app, name="firewall", help="List your firewall rules")
+app.add_typer(firewall.app, name="firewall", help="List and update your firewall rules")
 app.add_typer(images.app, name="images", help="List available images")
 app.add_typer(
     instances.app, name="instances", help="Manage your Lambda GPU Cloud instances"
@@ -25,7 +27,7 @@ app.add_typer(
 app.add_typer(
     instance_types.app,
     name="instance-types",
-    help="List the instances types offered by Lambda GPU Cloud",
+    help="List the instance types offered by Lambda GPU Cloud",
 )
 app.add_typer(
     setup.app, name="setup", help="Setup Lambdo with your API KEY and SSH path"
